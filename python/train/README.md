@@ -17,7 +17,7 @@ The training pipeline produces a tiny transformer with **ternary weights** ({-1,
 | FFN hidden dim (`d_ff`) | 256 |
 | Context length | 128 |
 | Head dim | 32 |
-| Total params | ~123K (~115K ternary + ~8.4K full-precision) |
+| Total params | ~115K (~98K ternary + ~17K full-precision) |
 
 **Architecture details:**
 - Pre-norm decoder-only transformer (GPT-style)
