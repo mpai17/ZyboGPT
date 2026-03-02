@@ -121,7 +121,7 @@ ZyboGPT/
       KvCache.scala        #   KV cache BRAM
       Int8MacArray.scala   #   8 parallel INT8 MACs
       ...                  #   (see hw/README.md for full list)
-  hw/src/test/scala/       # SpinalHDL simulation testbenches (12 tests)
+  hw/src/test/scala/       # SpinalHDL simulation testbenches (11 tests)
   rust/src/                # Bare-metal Zynq firmware
     main.rs                #   Entry point, generation loop
     accelerator.rs         #   AXI-Lite MMIO interface
@@ -199,7 +199,7 @@ Base address: `0x43C0_0000`
 ## Testing
 
 ```bash
-# All 12 SpinalHDL simulation tests
+# All 11 SpinalHDL simulation tests
 make spinal-test
 
 # Integration test: 16-token generation, bit-accurate match vs Python
