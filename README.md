@@ -32,7 +32,7 @@ Ternary weight packing uses the TerEffic 1.6-bit scheme (5 trits per byte), base
 | Layers | 2 |
 | FFN hidden dim | 256 |
 | Context length | 128 |
-| Parameters | ~123K (~115K ternary + ~8.4K full-precision) |
+| Parameters | ~115K (~98K ternary + ~17K full-precision) |
 | Training data | Tiny Shakespeare |
 
 ## Benchmark Methodology
