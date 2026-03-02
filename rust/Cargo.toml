@@ -1,0 +1,15 @@
+[package]
+name = "zybogpt-fw"
+version = "0.1.0"
+edition = "2021"
+description = "ZyboGPT bare-metal firmware for Zynq-7010 ARM Cortex-A9"
+
+[dependencies]
+volatile-register = "0.2"
+panic-halt = "1.0"
+
+[profile.release]
+opt-level = "s"      # Size optimization
+lto = true
+codegen-units = 1
+debug = false

@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+python/data/
+
+# Training
+checkpoints/
+export/
+test_vectors/
+
+# SpinalHDL
+hw/gen/
+hw/hw/
+hw/target/
+hw/project/
+hw/simWorkspace/
+
+# Vivado
+vivado/project/
+vivado/reports/
+vivado/*.jou
+vivado/*.log
+vivado/*.str
+
+# Rust
+rust/target/
