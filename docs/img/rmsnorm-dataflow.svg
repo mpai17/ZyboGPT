@@ -1,0 +1,168 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 480" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <marker id="a" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#546E7A"/>
+    </marker>
+  </defs>
+  <rect width="600" height="480" fill="#fff"/>
+
+  <text x="300" y="18" text-anchor="middle"
+        font-size="13" font-weight="600" fill="#37474F">RMSNorm — Integer Normalization Dataflow</text>
+
+  <!-- Input -->
+  <rect x="220" y="34" width="160" height="26" rx="4"
+        fill="#ECEFF1" stroke="#78909C" stroke-width="1.2"/>
+  <text x="300" y="51" text-anchor="middle"
+        font-size="11" fill="#37474F">x [64 × INT8]</text>
+
+  <line x1="300" y1="60" x2="300" y2="82"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- ═══ LOAD_SUM_SQ ═══ -->
+  <rect x="80" y="82" width="440" height="100" rx="6"
+        fill="none" stroke="#7CB342" stroke-width="1.5" stroke-dasharray="6 3"/>
+  <text x="96" y="98" font-size="10" font-weight="600"
+        fill="#558B2F">LOAD_SUM_SQ (~66 cyc)</text>
+
+  <!-- 3-stage pipeline inside -->
+  <rect x="100" y="108" width="110" height="32" rx="4"
+        fill="#E8F5E9" stroke="#43A047" stroke-width="1.5"/>
+  <text x="155" y="121" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#2E7D32">x[i] mux</text>
+  <text x="155" y="134" text-anchor="middle"
+        font-size="9" fill="#66BB6A">loadPipeReg</text>
+
+  <line x1="210" y1="124" x2="240" y2="124"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <rect x="240" y="108" width="110" height="32" rx="4"
+        fill="#E8F5E9" stroke="#43A047" stroke-width="1.5"/>
+  <text x="295" y="121" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#2E7D32">x[i]²</text>
+  <text x="295" y="134" text-anchor="middle"
+        font-size="9" fill="#66BB6A">sqPipe (LUT)</text>
+
+  <line x1="350" y1="124" x2="380" y2="124"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <rect x="380" y="108" width="120" height="32" rx="4"
+        fill="#FFF9C4" stroke="#F9A825" stroke-width="1.5"/>
+  <text x="440" y="121" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#F57F17">Accumulate</text>
+  <text x="440" y="134" text-anchor="middle"
+        font-size="9" fill="#F9A825">sumSq (UINT32)</text>
+
+  <!-- xMem write from stage 2 -->
+  <rect x="100" y="150" width="110" height="24" rx="4"
+        fill="#F3E5F5" stroke="#8E24AA" stroke-width="1.5"/>
+  <text x="155" y="166" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#6A1B9A">xMem [64×INT8]</text>
+
+  <path d="M 295,140 V 155 H 210"
+        stroke="#546E7A" stroke-width="1" fill="none" marker-end="url(#a)"/>
+  <text x="258" y="152" font-size="8" fill="#90A4AE" font-style="italic">write x[i]</text>
+
+  <!-- Arrow down from LOAD_SUM_SQ -->
+  <line x1="440" y1="182" x2="440" y2="204"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- ═══ LOOKUP ═══ -->
+  <rect x="310" y="204" width="260" height="56" rx="6"
+        fill="none" stroke="#42A5F5" stroke-width="1.5" stroke-dasharray="6 3"/>
+  <text x="326" y="220" font-size="10" font-weight="600"
+        fill="#1565C0">LOOKUP (3 cyc)</text>
+
+  <rect x="330" y="228" width="80" height="24" rx="4"
+        fill="#E8F5E9" stroke="#43A047" stroke-width="1.5"/>
+  <text x="370" y="244" text-anchor="middle"
+        font-size="9" font-weight="500" fill="#2E7D32">sumSq≫12</text>
+
+  <line x1="410" y1="240" x2="430" y2="240"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <rect x="430" y="228" width="120" height="24" rx="4"
+        fill="#F3E5F5" stroke="#8E24AA" stroke-width="1.5"/>
+  <text x="490" y="244" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#6A1B9A">invSqrtLut</text>
+
+  <!-- Arrow down -->
+  <line x1="440" y1="260" x2="440" y2="290"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+  <text x="476" y="280" font-size="9" fill="#90A4AE" font-style="italic">invRms Q2.14</text>
+
+  <!-- ═══ SCALE ═══ -->
+  <rect x="80" y="290" width="490" height="120" rx="6"
+        fill="none" stroke="#E65100" stroke-width="1.5" stroke-dasharray="6 3"/>
+  <text x="96" y="306" font-size="10" font-weight="600"
+        fill="#E65100">SCALE (~67 cyc) — 4-stage pipeline</text>
+
+  <!-- Stage 0 -->
+  <rect x="100" y="316" width="95" height="40" rx="4"
+        fill="#E3F2FD" stroke="#42A5F5" stroke-width="1.5"/>
+  <text x="147" y="332" text-anchor="middle"
+        font-size="9" font-weight="500" fill="#1565C0">Stage 0</text>
+  <text x="147" y="348" text-anchor="middle"
+        font-size="8" fill="#42A5F5">xMem→xPipe</text>
+
+  <line x1="195" y1="336" x2="215" y2="336"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- Stage 1 -->
+  <rect x="215" y="316" width="105" height="40" rx="4"
+        fill="#E3F2FD" stroke="#42A5F5" stroke-width="1.5"/>
+  <text x="267" y="332" text-anchor="middle"
+        font-size="9" font-weight="500" fill="#1565C0">Stage 1 (DSP)</text>
+  <text x="267" y="348" text-anchor="middle"
+        font-size="8" fill="#42A5F5">x × invRms ≫8</text>
+
+  <line x1="320" y1="336" x2="340" y2="336"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- Stage 2 -->
+  <rect x="340" y="316" width="105" height="40" rx="4"
+        fill="#E3F2FD" stroke="#42A5F5" stroke-width="1.5"/>
+  <text x="392" y="332" text-anchor="middle"
+        font-size="9" font-weight="500" fill="#1565C0">Stage 2 (DSP)</text>
+  <text x="392" y="348" text-anchor="middle"
+        font-size="8" fill="#42A5F5">× gamma ≫10</text>
+
+  <line x1="445" y1="336" x2="465" y2="336"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- Stage 3 -->
+  <rect x="465" y="316" width="85" height="40" rx="4"
+        fill="#E3F2FD" stroke="#42A5F5" stroke-width="1.5"/>
+  <text x="507" y="332" text-anchor="middle"
+        font-size="9" font-weight="500" fill="#1565C0">Stage 3</text>
+  <text x="507" y="348" text-anchor="middle"
+        font-size="8" fill="#42A5F5">SatInt8</text>
+
+  <!-- Gamma input from external -->
+  <rect x="340" y="370" width="120" height="24" rx="4"
+        fill="#ECEFF1" stroke="#78909C" stroke-width="1.2"/>
+  <text x="400" y="386" text-anchor="middle"
+        font-size="9" fill="#37474F">normGammaMem INT16</text>
+
+  <path d="M 392,370 V 356"
+        stroke="#546E7A" stroke-width="1" fill="none" marker-end="url(#a)"/>
+
+  <!-- xMem read to Stage 0: left-margin route -->
+  <path d="M 100,162 H 70 V 336 H 100"
+        stroke="#8E24AA" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+  <text x="63" y="255" font-size="8" fill="#8E24AA" font-style="italic"
+        transform="rotate(-90 63 255)">read x[i]</text>
+
+  <!-- Arrow from Stage 3 down to output -->
+  <path d="M 507,356 V 432 H 380"
+        stroke="#546E7A" stroke-width="1.3" fill="none" marker-end="url(#a)"/>
+
+  <!-- Output -->
+  <rect x="220" y="420" width="160" height="26" rx="4"
+        fill="#FFEBEE" stroke="#E53935" stroke-width="1.5"/>
+  <text x="300" y="437" text-anchor="middle"
+        font-size="12" font-weight="600" fill="#C62828">y [64 × INT8]</text>
+
+  <!-- Note -->
+  <text x="300" y="466" text-anchor="middle"
+        font-size="9" fill="#90A4AE">~137 total cycles · 2 DSPs · 2 BRAMs (xMem + invSqrtLut)</text>
+</svg>

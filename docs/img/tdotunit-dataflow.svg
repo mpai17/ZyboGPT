@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 210" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <marker id="a" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#546E7A"/>
+    </marker>
+  </defs>
+  <rect width="560" height="210" fill="#fff"/>
+
+  <text x="280" y="18" text-anchor="middle"
+        font-size="13" font-weight="600" fill="#37474F">TDotUnit — 3-Stage Pipelined Adder Tree</text>
+
+  <!-- Inputs -->
+  <rect x="10" y="48" width="88" height="26" rx="4"
+        fill="#ECEFF1" stroke="#78909C" stroke-width="1.2"/>
+  <text x="54" y="65" text-anchor="middle"
+        font-size="11" fill="#37474F">x [64×INT8]</text>
+
+  <rect x="10" y="108" width="88" height="26" rx="4"
+        fill="#ECEFF1" stroke="#78909C" stroke-width="1.2"/>
+  <text x="54" y="125" text-anchor="middle"
+        font-size="11" fill="#37474F">w [64×2b]</text>
+
+  <!-- Arrows to mux -->
+  <line x1="98" y1="61" x2="128" y2="61"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+  <path d="M 98,121 H 113 V 100 H 128"
+        stroke="#546E7A" stroke-width="1.3" fill="none" marker-end="url(#a)"/>
+
+  <!-- Ternary Mux -->
+  <rect x="128" y="38" width="86" height="90" rx="4"
+        fill="#E8F5E9" stroke="#43A047" stroke-width="1.5"/>
+  <text x="171" y="68" text-anchor="middle"
+        font-size="11" font-weight="500" fill="#2E7D32">Ternary</text>
+  <text x="171" y="82" text-anchor="middle"
+        font-size="11" font-weight="500" fill="#2E7D32">Mux</text>
+  <text x="171" y="102" text-anchor="middle"
+        font-size="9" fill="#66BB6A">±x[i] or 0</text>
+  <text x="171" y="118" text-anchor="middle"
+        font-size="9" fill="#66BB6A">64 × INT9</text>
+
+  <!-- Pipeline boundary 1 -->
+  <line x1="228" y1="30" x2="228" y2="175"
+        stroke="#B0BEC5" stroke-width="0.8" stroke-dasharray="4 3"/>
+  <text x="228" y="188" text-anchor="middle"
+        font-size="8" fill="#B0BEC5">REG</text>
+
+  <!-- Arrow to Stage 1 -->
+  <line x1="214" y1="83" x2="244" y2="83"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- Stage 1 -->
+  <rect x="244" y="53" width="84" height="60" rx="4"
+        fill="#E3F2FD" stroke="#42A5F5" stroke-width="1.5"/>
+  <text x="286" y="72" text-anchor="middle"
+        font-size="11" font-weight="500" fill="#1565C0">Stage 1</text>
+  <text x="286" y="87" text-anchor="middle"
+        font-size="9" fill="#42A5F5">64→32 pairs</text>
+  <text x="286" y="102" text-anchor="middle"
+        font-size="9" fill="#42A5F5">INT10</text>
+
+  <!-- Pipeline boundary 2 -->
+  <line x1="342" y1="30" x2="342" y2="175"
+        stroke="#B0BEC5" stroke-width="0.8" stroke-dasharray="4 3"/>
+  <text x="342" y="188" text-anchor="middle"
+        font-size="8" fill="#B0BEC5">REG</text>
+
+  <!-- Arrow to Stage 2 -->
+  <line x1="328" y1="83" x2="358" y2="83"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- Stage 2 -->
+  <rect x="358" y="53" width="84" height="60" rx="4"
+        fill="#E3F2FD" stroke="#42A5F5" stroke-width="1.5"/>
+  <text x="400" y="72" text-anchor="middle"
+        font-size="11" font-weight="500" fill="#1565C0">Stage 2</text>
+  <text x="400" y="87" text-anchor="middle"
+        font-size="9" fill="#42A5F5">32→16→8</text>
+  <text x="400" y="102" text-anchor="middle"
+        font-size="9" fill="#42A5F5">INT12</text>
+
+  <!-- Pipeline boundary 3 -->
+  <line x1="456" y1="30" x2="456" y2="175"
+        stroke="#B0BEC5" stroke-width="0.8" stroke-dasharray="4 3"/>
+  <text x="456" y="188" text-anchor="middle"
+        font-size="8" fill="#B0BEC5">REG</text>
+
+  <!-- Arrow to Stage 3 -->
+  <line x1="442" y1="83" x2="472" y2="83"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- Stage 3 -->
+  <rect x="472" y="53" width="80" height="60" rx="4"
+        fill="#E3F2FD" stroke="#42A5F5" stroke-width="1.5"/>
+  <text x="512" y="72" text-anchor="middle"
+        font-size="11" font-weight="500" fill="#1565C0">Stage 3</text>
+  <text x="512" y="87" text-anchor="middle"
+        font-size="9" fill="#42A5F5">8→4→2→1</text>
+  <text x="512" y="102" text-anchor="middle"
+        font-size="9" fill="#42A5F5">INT15</text>
+
+  <!-- Arrow down to result -->
+  <line x1="512" y1="113" x2="512" y2="140"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- Result -->
+  <rect x="462" y="140" width="90" height="26" rx="4"
+        fill="#FFEBEE" stroke="#E53935" stroke-width="1.5"/>
+  <text x="507" y="157" text-anchor="middle"
+        font-size="11" font-weight="600" fill="#C62828">result INT24</text>
+
+  <!-- Note -->
+  <text x="280" y="205" text-anchor="middle"
+        font-size="9" fill="#90A4AE">Latency: 3 cycles · Throughput: 1/cycle · Zero DSPs</text>
+</svg>

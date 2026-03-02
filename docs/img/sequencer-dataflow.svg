@@ -1,0 +1,165 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 560" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <marker id="a" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#546E7A"/>
+    </marker>
+    <marker id="al" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#90A4AE"/>
+    </marker>
+  </defs>
+  <rect width="600" height="560" fill="#fff"/>
+
+  <text x="300" y="18" text-anchor="middle"
+        font-size="13" font-weight="600" fill="#37474F">Sequencer — Master Inference FSM</text>
+
+  <!-- IDLE -->
+  <rect x="190" y="38" width="130" height="28" rx="4"
+        fill="#ECEFF1" stroke="#78909C" stroke-width="1.5"/>
+  <text x="255" y="56" text-anchor="middle"
+        font-size="11" font-weight="500" fill="#37474F">IDLE</text>
+
+  <!-- start pulse label -->
+  <rect x="340" y="38" width="100" height="28" rx="4"
+        fill="#ECEFF1" stroke="#78909C" stroke-width="1.2"/>
+  <text x="390" y="56" text-anchor="middle"
+        font-size="9" fill="#37474F">start pulse</text>
+  <line x1="340" y1="52" x2="320" y2="52"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <line x1="255" y1="66" x2="255" y2="88"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- EMBED -->
+  <rect x="180" y="88" width="150" height="36" rx="4"
+        fill="#E8F5E9" stroke="#43A047" stroke-width="1.5"/>
+  <text x="255" y="105" text-anchor="middle"
+        font-size="11" font-weight="500" fill="#2E7D32">EMBED</text>
+  <text x="255" y="118" text-anchor="middle"
+        font-size="8" fill="#66BB6A">token + position lookup</text>
+
+  <line x1="255" y1="124" x2="255" y2="146"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- EMB_READ -->
+  <rect x="160" y="146" width="190" height="36" rx="4"
+        fill="#E3F2FD" stroke="#42A5F5" stroke-width="1.5"/>
+  <text x="255" y="163" text-anchor="middle"
+        font-size="11" font-weight="500" fill="#1565C0">EMB_READ</text>
+  <text x="255" y="176" text-anchor="middle"
+        font-size="8" fill="#42A5F5">2-stage pipeline → actBuf</text>
+
+  <line x1="255" y1="182" x2="255" y2="208"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- actBuf label -->
+  <text x="290" y="200" font-size="8" fill="#90A4AE" font-style="italic">actBuf [64×INT8]</text>
+
+  <!-- LAYER_LOOP -->
+  <rect x="155" y="208" width="200" height="36" rx="4"
+        fill="#E8F5E9" stroke="#43A047" stroke-width="1.5"/>
+  <text x="255" y="226" text-anchor="middle"
+        font-size="11" font-weight="500" fill="#2E7D32">LAYER_LOOP</text>
+  <text x="255" y="240" text-anchor="middle"
+        font-size="8" fill="#66BB6A">×2 layers · TransformerLayer → actBuf</text>
+
+  <line x1="255" y1="244" x2="255" y2="276"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+  <text x="290" y="268" font-size="8" fill="#90A4AE" font-style="italic">actBuf</text>
+
+  <!-- FINAL_NORM -->
+  <rect x="175" y="276" width="160" height="36" rx="4"
+        fill="#E8F5E9" stroke="#43A047" stroke-width="1.5"/>
+  <text x="255" y="293" text-anchor="middle"
+        font-size="11" font-weight="500" fill="#2E7D32">FINAL_NORM</text>
+  <text x="255" y="306" text-anchor="middle"
+        font-size="8" fill="#66BB6A">RMSNorm → actBuf</text>
+
+  <line x1="255" y1="312" x2="255" y2="338"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+  <text x="290" y="330" font-size="8" fill="#90A4AE" font-style="italic">actBuf</text>
+
+  <!-- OUTPUT_LOGITS -->
+  <rect x="150" y="338" width="210" height="44" rx="4"
+        fill="#E8F5E9" stroke="#43A047" stroke-width="1.5"/>
+  <text x="255" y="356" text-anchor="middle"
+        font-size="11" font-weight="500" fill="#2E7D32">OUTPUT_LOGITS</text>
+  <text x="255" y="370" text-anchor="middle"
+        font-size="8" fill="#66BB6A">128 vocab × dot(actBuf, tokEmb)</text>
+
+  <!-- logitBuf and maxToken labels -->
+  <rect x="390" y="338" width="130" height="22" rx="4"
+        fill="#F3E5F5" stroke="#8E24AA" stroke-width="1.2"/>
+  <text x="455" y="353" text-anchor="middle"
+        font-size="8" font-weight="500" fill="#6A1B9A">logitBuf [128×INT24]</text>
+
+  <rect x="390" y="364" width="130" height="18" rx="4"
+        fill="#FFF9C4" stroke="#F9A825" stroke-width="1.2"/>
+  <text x="455" y="377" text-anchor="middle"
+        font-size="8" font-weight="500" fill="#F57F17">maxLogit / maxToken</text>
+
+  <line x1="360" y1="349" x2="390" y2="349"
+        stroke="#546E7A" stroke-width="1" marker-end="url(#a)"/>
+  <line x1="360" y1="373" x2="390" y2="373"
+        stroke="#546E7A" stroke-width="1" marker-end="url(#a)"/>
+
+  <!-- Branch: ARGMAX or SAMPLING -->
+  <line x1="255" y1="382" x2="255" y2="404"
+        stroke="#546E7A" stroke-width="1.3"/>
+
+  <!-- Branch lines -->
+  <path d="M 255,404 H 160 V 416"
+        stroke="#546E7A" stroke-width="1.3" fill="none" marker-end="url(#a)"/>
+  <path d="M 255,404 H 350 V 416"
+        stroke="#546E7A" stroke-width="1.3" fill="none" marker-end="url(#a)"/>
+
+  <!-- ARGMAX -->
+  <rect x="95" y="416" width="130" height="30" rx="4"
+        fill="#E3F2FD" stroke="#42A5F5" stroke-width="1.5"/>
+  <text x="160" y="432" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#1565C0">ARGMAX</text>
+  <text x="160" y="443" text-anchor="middle"
+        font-size="8" fill="#42A5F5">invTemp = 0</text>
+
+  <!-- SAMPLING -->
+  <rect x="285" y="416" width="130" height="30" rx="4"
+        fill="#E3F2FD" stroke="#42A5F5" stroke-width="1.5"/>
+  <text x="350" y="432" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#1565C0">SAMPLING</text>
+  <text x="350" y="443" text-anchor="middle"
+        font-size="8" fill="#42A5F5">invTemp > 0</text>
+
+  <!-- Converge to DONE -->
+  <path d="M 160,446 V 468 H 255"
+        stroke="#546E7A" stroke-width="1.3" fill="none"/>
+  <path d="M 350,446 V 468 H 255"
+        stroke="#546E7A" stroke-width="1.3" fill="none"/>
+  <line x1="255" y1="468" x2="255" y2="488"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- DONE -->
+  <rect x="190" y="488" width="130" height="28" rx="4"
+        fill="#FFEBEE" stroke="#E53935" stroke-width="1.5"/>
+  <text x="255" y="506" text-anchor="middle"
+        font-size="11" font-weight="600" fill="#C62828">DONE</text>
+
+  <!-- Output label -->
+  <rect x="350" y="488" width="140" height="28" rx="4"
+        fill="#FFEBEE" stroke="#E53935" stroke-width="1.2"/>
+  <text x="420" y="506" text-anchor="middle"
+        font-size="10" font-weight="600" fill="#C62828">tokenOut [UINT7]</text>
+
+  <line x1="320" y1="502" x2="350" y2="502"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- Cycle counter -->
+  <rect x="30" y="88" width="110" height="22" rx="4"
+        fill="#FFF9C4" stroke="#F9A825" stroke-width="1.2"/>
+  <text x="85" y="103" text-anchor="middle"
+        font-size="8" font-weight="500" fill="#F57F17">cycleCounter++</text>
+  <text x="85" y="118" text-anchor="middle"
+        font-size="7" fill="#90A4AE">while state ≠ IDLE</text>
+
+  <!-- Note -->
+  <text x="300" y="545" text-anchor="middle"
+        font-size="9" fill="#90A4AE">actBuf = Vec(Reg) register file (parallel read) · logitBuf = BRAM (sequential access)</text>
+</svg>

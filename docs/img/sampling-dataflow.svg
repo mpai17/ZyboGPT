@@ -1,0 +1,154 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 480" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <marker id="a" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#546E7A"/>
+    </marker>
+  </defs>
+  <rect width="600" height="480" fill="#fff"/>
+
+  <text x="300" y="18" text-anchor="middle"
+        font-size="13" font-weight="600" fill="#37474F">SamplingUnit — Two-Pass Temperature Sampling</text>
+
+  <!-- Inputs -->
+  <rect x="30" y="38" width="110" height="24" rx="4"
+        fill="#ECEFF1" stroke="#78909C" stroke-width="1.2"/>
+  <text x="85" y="54" text-anchor="middle" font-size="9" fill="#37474F">logitData [INT24]</text>
+
+  <rect x="160" y="38" width="100" height="24" rx="4"
+        fill="#ECEFF1" stroke="#78909C" stroke-width="1.2"/>
+  <text x="210" y="54" text-anchor="middle" font-size="9" fill="#37474F">maxLogit [INT24]</text>
+
+  <rect x="280" y="38" width="100" height="24" rx="4"
+        fill="#ECEFF1" stroke="#78909C" stroke-width="1.2"/>
+  <text x="330" y="54" text-anchor="middle" font-size="9" fill="#37474F">invTemp [UINT16]</text>
+
+  <!-- Arrows from inputs into PASS 1 box -->
+  <line x1="85" y1="62" x2="85" y2="80"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+  <line x1="210" y1="62" x2="210" y2="80"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+  <line x1="330" y1="62" x2="330" y2="80"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- ═══ PASS1 ═══ -->
+  <rect x="20" y="80" width="560" height="130" rx="6"
+        fill="none" stroke="#7CB342" stroke-width="1.5" stroke-dasharray="6 3"/>
+  <text x="36" y="96" font-size="10" font-weight="600" fill="#558B2F">PASS 1 — Compute total probability (~131 cyc)</text>
+
+  <!-- 4-stage pipeline -->
+  <rect x="40" y="108" width="100" height="36" rx="4"
+        fill="#E8F5E9" stroke="#43A047" stroke-width="1.5"/>
+  <text x="90" y="122" text-anchor="middle"
+        font-size="9" font-weight="500" fill="#2E7D32">logit − max</text>
+  <text x="90" y="136" text-anchor="middle"
+        font-size="8" fill="#66BB6A">≫12 (LOGIT_SHIFT)</text>
+
+  <line x1="140" y1="126" x2="160" y2="126"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <rect x="160" y="108" width="110" height="36" rx="4"
+        fill="#E8F5E9" stroke="#43A047" stroke-width="1.5"/>
+  <text x="215" y="122" text-anchor="middle"
+        font-size="9" font-weight="500" fill="#2E7D32">× invTemp ≫8</text>
+  <text x="215" y="136" text-anchor="middle"
+        font-size="8" fill="#66BB6A">temperature scale</text>
+
+  <line x1="270" y1="126" x2="290" y2="126"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <rect x="290" y="108" width="130" height="36" rx="4"
+        fill="#E8F5E9" stroke="#43A047" stroke-width="1.5"/>
+  <text x="355" y="122" text-anchor="middle"
+        font-size="9" font-weight="500" fill="#2E7D32">prob (bit manip)</text>
+  <text x="355" y="136" text-anchor="middle"
+        font-size="8" fill="#66BB6A">3 LUT levels (not add)</text>
+
+  <line x1="420" y1="126" x2="440" y2="126"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <rect x="440" y="108" width="120" height="36" rx="4"
+        fill="#FFF9C4" stroke="#F9A825" stroke-width="1.5"/>
+  <text x="500" y="122" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#F57F17">totalProb</text>
+  <text x="500" y="136" text-anchor="middle"
+        font-size="8" fill="#F9A825">Σ prob[i] (UINT24)</text>
+
+  <!-- Pipeline detail -->
+  <text x="300" y="170" text-anchor="middle"
+        font-size="8" fill="#90A4AE">prob = isNonNeg? 256 : inRange? shifted[7:0] : 0 — bit checks replace 32-bit comparator</text>
+
+  <!-- Logit addresses -->
+  <text x="300" y="198" text-anchor="middle"
+        font-size="8" fill="#90A4AE">logitAddr: 0→127 · readSync from Sequencer logitBuf</text>
+
+  <!-- Arrow down -->
+  <line x1="300" y1="210" x2="300" y2="234"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- ═══ THRESHOLD ═══ -->
+  <rect x="120" y="234" width="360" height="52" rx="6"
+        fill="none" stroke="#42A5F5" stroke-width="1.5" stroke-dasharray="6 3"/>
+  <text x="136" y="250" font-size="10" font-weight="600" fill="#1565C0">THRESHOLD (1 cycle)</text>
+
+  <rect x="140" y="260" width="120" height="20" rx="3"
+        fill="#E8F5E9" stroke="#43A047" stroke-width="1.2"/>
+  <text x="200" y="274" text-anchor="middle"
+        font-size="8" font-weight="500" fill="#2E7D32">LFSR step (Galois)</text>
+
+  <line x1="260" y1="270" x2="280" y2="270"
+        stroke="#546E7A" stroke-width="1" marker-end="url(#a)"/>
+
+  <rect x="280" y="260" width="180" height="20" rx="3"
+        fill="#FFF9C4" stroke="#F9A825" stroke-width="1.2"/>
+  <text x="370" y="274" text-anchor="middle"
+        font-size="8" font-weight="500" fill="#F57F17">threshold = (lfsr[15:0] × totalProb) ≫16</text>
+
+  <!-- Arrow down -->
+  <line x1="300" y1="286" x2="300" y2="310"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- ═══ PASS2 ═══ -->
+  <rect x="20" y="310" width="560" height="100" rx="6"
+        fill="none" stroke="#E65100" stroke-width="1.5" stroke-dasharray="6 3"/>
+  <text x="36" y="326" font-size="10" font-weight="600" fill="#E65100">PASS 2 — Inverse CDF sampling (~131 cyc)</text>
+
+  <!-- Same pipeline -->
+  <rect x="40" y="340" width="220" height="24" rx="4"
+        fill="#E8F5E9" stroke="#43A047" stroke-width="1.5"/>
+  <text x="150" y="356" text-anchor="middle"
+        font-size="9" font-weight="500" fill="#2E7D32">Same 4-stage pipeline → prob[i]</text>
+
+  <line x1="260" y1="352" x2="280" y2="352"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <rect x="280" y="340" width="110" height="24" rx="4"
+        fill="#FFF9C4" stroke="#F9A825" stroke-width="1.5"/>
+  <text x="335" y="356" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#F57F17">cumSum += prob</text>
+
+  <line x1="390" y1="352" x2="410" y2="352"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <rect x="410" y="340" width="150" height="24" rx="4"
+        fill="#E3F2FD" stroke="#42A5F5" stroke-width="1.5"/>
+  <text x="485" y="356" text-anchor="middle"
+        font-size="9" font-weight="500" fill="#1565C0">cumSum > threshold?</text>
+
+  <!-- Selection note -->
+  <text x="300" y="390" text-anchor="middle"
+        font-size="8" fill="#90A4AE">First token where cumSum exceeds threshold → latch selectedToken (found flag prevents overwrite)</text>
+
+  <!-- Arrow down -->
+  <line x1="300" y1="410" x2="300" y2="434"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- Output -->
+  <rect x="210" y="434" width="180" height="24" rx="4"
+        fill="#FFEBEE" stroke="#E53935" stroke-width="1.5"/>
+  <text x="300" y="450" text-anchor="middle"
+        font-size="11" font-weight="600" fill="#C62828">selectedToken [UINT7]</text>
+
+  <!-- Note -->
+  <text x="300" y="475" text-anchor="middle"
+        font-size="9" fill="#90A4AE">~264 cycles total · LFSR polynomial 0xD000_0001 · invTemp=0 → skip (greedy argmax)</text>
+</svg>

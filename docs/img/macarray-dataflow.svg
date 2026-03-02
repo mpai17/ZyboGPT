@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 240" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <marker id="a" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#546E7A"/>
+    </marker>
+  </defs>
+  <rect width="540" height="240" fill="#fff"/>
+
+  <text x="270" y="18" text-anchor="middle"
+        font-size="13" font-weight="600" fill="#37474F">Int8MacArray — 8 Parallel Multiply-Accumulate Units</text>
+
+  <!-- Inputs -->
+  <rect x="10" y="55" width="90" height="24" rx="4"
+        fill="#ECEFF1" stroke="#78909C" stroke-width="1.2"/>
+  <text x="55" y="71" text-anchor="middle" font-size="10" fill="#37474F">a [8×INT8]</text>
+
+  <rect x="10" y="93" width="90" height="24" rx="4"
+        fill="#ECEFF1" stroke="#78909C" stroke-width="1.2"/>
+  <text x="55" y="109" text-anchor="middle" font-size="10" fill="#37474F">b [8×INT8]</text>
+
+  <rect x="10" y="140" width="90" height="24" rx="4"
+        fill="#ECEFF1" stroke="#78909C" stroke-width="1.2"/>
+  <text x="55" y="156" text-anchor="middle" font-size="10" fill="#37474F">clear / start</text>
+
+  <!-- Arrows to MAC detail -->
+  <line x1="100" y1="67" x2="140" y2="67"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+  <line x1="100" y1="105" x2="140" y2="105"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- MAC unit detail box (×8) -->
+  <rect x="140" y="34" width="280" height="160" rx="6"
+        fill="none" stroke="#7CB342" stroke-width="1.5" stroke-dasharray="6 3"/>
+  <text x="156" y="50" font-size="10" font-weight="600" fill="#558B2F">×8 parallel MAC units</text>
+
+  <!-- aReg -->
+  <rect x="158" y="58" width="58" height="26" rx="4"
+        fill="#E3F2FD" stroke="#42A5F5" stroke-width="1.5"/>
+  <text x="187" y="72" text-anchor="middle" font-size="9" font-weight="500" fill="#1565C0">aReg</text>
+  <text x="187" y="82" text-anchor="middle" font-size="7" fill="#42A5F5">DSP AREG</text>
+
+  <!-- bReg -->
+  <rect x="158" y="96" width="58" height="26" rx="4"
+        fill="#E3F2FD" stroke="#42A5F5" stroke-width="1.5"/>
+  <text x="187" y="110" text-anchor="middle" font-size="9" font-weight="500" fill="#1565C0">bReg</text>
+  <text x="187" y="120" text-anchor="middle" font-size="7" fill="#42A5F5">DSP BREG</text>
+
+  <!-- Arrows from regs to product (rectilinear) -->
+  <path d="M 216,71 H 234 V 82 H 252"
+        stroke="#546E7A" stroke-width="1" fill="none" marker-end="url(#a)"/>
+  <path d="M 216,109 H 234 V 98 H 252"
+        stroke="#546E7A" stroke-width="1" fill="none" marker-end="url(#a)"/>
+
+  <!-- Product -->
+  <rect x="252" y="70" width="76" height="40" rx="4"
+        fill="#E8F5E9" stroke="#43A047" stroke-width="1.5"/>
+  <text x="290" y="88" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#2E7D32">a × b</text>
+  <text x="290" y="102" text-anchor="middle"
+        font-size="8" fill="#66BB6A">INT16</text>
+
+  <!-- Arrow down to accumulator -->
+  <line x1="290" y1="110" x2="290" y2="130"
+        stroke="#546E7A" stroke-width="1" marker-end="url(#a)"/>
+
+  <!-- Accumulator -->
+  <rect x="252" y="130" width="76" height="30" rx="4"
+        fill="#FFF9C4" stroke="#F9A825" stroke-width="1.5"/>
+  <text x="290" y="145" text-anchor="middle"
+        font-size="9" font-weight="500" fill="#F57F17">acc += prod</text>
+  <text x="290" y="157" text-anchor="middle"
+        font-size="8" fill="#F9A825">INT24</text>
+
+  <!-- Step counter -->
+  <rect x="158" y="168" width="150" height="20" rx="3"
+        fill="#ECEFF1" stroke="#78909C" stroke-width="1"/>
+  <text x="233" y="182" text-anchor="middle"
+        font-size="8" fill="#546E7A">stepCounter: 0 → innerDim−1</text>
+
+  <!-- Arrow from accumulator to output -->
+  <path d="M 328,145 H 360 V 88 H 435"
+        stroke="#546E7A" stroke-width="1.3" fill="none" marker-end="url(#a)"/>
+
+  <!-- Output -->
+  <rect x="435" y="75" width="95" height="26" rx="4"
+        fill="#FFEBEE" stroke="#E53935" stroke-width="1.5"/>
+  <text x="482" y="92" text-anchor="middle"
+        font-size="10" font-weight="600" fill="#C62828">results</text>
+  <text x="482" y="112" text-anchor="middle"
+        font-size="9" fill="#90A4AE">[8 × INT24]</text>
+
+  <!-- Done output -->
+  <rect x="435" y="128" width="55" height="22" rx="4"
+        fill="#FFEBEE" stroke="#E53935" stroke-width="1.5"/>
+  <text x="462" y="143" text-anchor="middle"
+        font-size="10" font-weight="600" fill="#C62828">done</text>
+
+  <path d="M 308,178 H 360 V 139 H 435"
+        stroke="#546E7A" stroke-width="1.3" fill="none" marker-end="url(#a)"/>
+
+  <!-- Note -->
+  <text x="270" y="228" text-anchor="middle"
+        font-size="9" fill="#90A4AE">innerDim = headDim/8 + 1 = 5 (4 data + 1 drain) · 293 LUTs total</text>
+</svg>

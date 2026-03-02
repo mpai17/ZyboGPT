@@ -117,6 +117,8 @@ Key constants from Config.scala:
 
 **Files: `WeightBram.scala`, `WeightDecoder.scala`, `Config.scala`**
 
+<img src="img/weightbram-dataflow.svg" alt="WeightBram dataflow diagram" width="620"/>
+
 ### 3a: TerEffic Packing
 
 Five ternary trits (each from {-1, 0, +1}) are packed into one byte using base-3 encoding. Each trit `ti` is mapped as: -1→0, 0→1, +1→2. The packed value is:
@@ -174,6 +176,8 @@ For each of the 32 output rows, the FSM:
 
 **File: `TDotUnit.scala`**
 
+<img src="img/tdotunit-dataflow.svg" alt="TDotUnit dataflow diagram" width="560"/>
+
 The core arithmetic primitive. Computes `dot(x, w) = Sigma(x[i] * w[i])` where `x` is 64 INT8 values and `w` is 64 ternary values.
 
 Since weights are from {-1, 0, +1}, multiplication is just a mux: select `+x[i]`, `-x[i]`, or `0`. The input `x` is widened to 9 bits (line 35) to safely negate -128 (which has no positive INT8 representation). The 64 mux outputs then flow through a **3-stage pipelined binary adder tree**:
@@ -199,6 +203,8 @@ The `addPairs()` helper (lines 46–55) implements pairwise addition with automa
 ## Section 5: The INT8 MAC Array
 
 **Files: `Int8MacUnit.scala`, `Int8MacArray.scala`**
+
+<img src="img/macarray-dataflow.svg" alt="Int8MacArray dataflow diagram" width="540"/>
 
 Used for attention score computation (Q dot K^T) and attention-weighted value accumulation (probs dot V), where both operands are INT8 rather than INT8 × ternary.
 
@@ -234,6 +240,8 @@ Each MAC computes a partial sum over its 4-element slice. The Attention module s
 ## Section 6: RMSNorm — Integer Normalization
 
 **File: `RMSNorm.scala`** (lines 29–255)
+
+<img src="img/rmsnorm-dataflow.svg" alt="RMSNorm dataflow diagram" width="600"/>
 
 Implements `y[i] = clamp(x[i] / rms(x) * gamma[i] * 64, -128, 127)` in pure integer arithmetic.
 
@@ -271,6 +279,8 @@ The combined shift of 18 (8 + 10) instead of the "natural" 24 provides the **×6
 ## Section 7: Softmax — Integer Probability
 
 **File: `Softmax.scala`** (lines 24–300)
+
+<img src="img/softmax-dataflow.svg" alt="Softmax dataflow diagram" width="560"/>
 
 Converts INT16 attention scores to UINT8 probabilities (0–255, approximately summing to 256).
 
@@ -320,6 +330,8 @@ A 3-stage pipeline:
 
 **File: `Attention.scala`** (lines 23–517)
 
+<img src="img/attention-dataflow.svg" alt="Attention dataflow diagram" width="700"/>
+
 The most complex module with a **17-state FSM** (lines 72–76). For each of 2 attention heads:
 
 ### Phase 1: Linear Projections (Q, K, V, O via TDot)
@@ -367,6 +379,8 @@ For each cached position:
 
 **File: `FeedForward.scala`** (lines 17–238)
 
+<img src="img/feedforward-dataflow.svg" alt="FeedForward dataflow diagram" width="580"/>
+
 Two linear projections with ReLU activation between them. Up-projects from 64 → 256, then down-projects from 256 → 64.
 
 ### FSM: IDLE → UP_PROJ → STORE_UP → LOAD_SLICE → DOWN_PROJ → DONE
@@ -394,9 +408,11 @@ The down projection is `W_down[64x256] dot upMem[256]`. Since TDot width is 64 a
 
 **File: `KvCache.scala`** (lines 17–126)
 
-Two BRAMs (`kMem`, `vMem`, lines 43–44) storing all K/V vectors for all layers, heads, and positions. Total: 2 × 32,768 INT8 entries = 64 KB address space (mapped to 8 BRAM36 tiles).
+<img src="img/kvcache-dataflow.svg" alt="KV Cache dataflow diagram" width="580"/>
 
-Dimensions: `nLayers(2) × nHeads(2) × ctxLen(128) × headDim(32) = 32,768` entries per cache.
+Two BRAMs (`kMem`, `vMem`, lines 43–44) storing all K/V vectors for all layers, heads, and positions. Total: 2 × 16,384 INT8 entries = 32 KB (mapped to 8 BRAM36 tiles).
+
+Dimensions: `nLayers(2) × nHeads(2) × ctxLen(128) × headDim(32) = 16,384` entries per cache.
 
 ### Address Computation (Pure Bit Shifts)
 
@@ -425,6 +441,8 @@ Both reads and writes are serialized over 32 cycles — one `headDim` element pe
 ## Section 11: Embedding and Logit Computation
 
 **File: `Embedding.scala`** (lines 17–241)
+
+<img src="img/embedding-dataflow.svg" alt="Embedding dataflow diagram" width="640"/>
 
 A dual-purpose module with two modes:
 
@@ -459,6 +477,8 @@ Computes `dot(actBuf, tokEmb[vocabIdx])` for all 128 vocab entries — a dot pro
 ## Section 12: Temperature Sampling
 
 **File: `SamplingUnit.scala`** (lines 27–225)
+
+<img src="img/sampling-dataflow.svg" alt="SamplingUnit dataflow diagram" width="600"/>
 
 Only invoked when `invTemp > 0` (otherwise the Sequencer uses greedy argmax from the logit computation phase).
 
@@ -498,6 +518,8 @@ Accumulate all probabilities into `totalProb` (line 151). Drain condition at ste
 
 **File: `TransformerLayer.scala`** (lines 11–230)
 
+<img src="img/transformerlayer-dataflow.svg" alt="TransformerLayer dataflow diagram" width="640"/>
+
 Orchestrates one decoder layer: `x → attn_norm → attention → residual → ff_norm → ffn → residual`.
 
 ### FSM: IDLE → ATTN_NORM → ATTENTION → ATTN_RESIDUAL → FF_NORM → FEEDFORWARD → FF_RESIDUAL → DONE
@@ -524,6 +546,8 @@ The full gamma address output to `normGammaMem` is `normGammaBase + rmsNorm.io.g
 ## Section 14: The Sequencer — Master Controller
 
 **File: `Sequencer.scala`** (lines 1–263)
+
+<img src="img/sequencer-dataflow.svg" alt="Sequencer dataflow diagram" width="600"/>
 
 The top-level inference FSM. Drives everything.
 
@@ -616,7 +640,7 @@ Vivado post-implementation utilization on xc7z010clg400-1:
 | WeightBram (weightMem) | 5 | 19,776 bytes packed ternary weights |
 | Token embeddings (tokEmbMem + tokEmbWide) | 8 | 128×64 INT16 + 128-bit wide duplicate |
 | Position embeddings (posEmbMem) | 4 | 128×64 INT16 |
-| KV cache (kMem + vMem) | 8 | 2 × 32K INT8 entries |
+| KV cache (kMem + vMem) | 8 | 2 × 16K INT8 entries |
 | Softmax LUTs + buffers | ~3 | plExpLut, recipLut, expMem, scoreMem, probMem |
 | RMSNorm (xMem + invSqrtLut) | ~1.5 | 64 INT8 + 256 UINT16 |
 | normGammaMem | ~0.5 | 320 INT16 entries |

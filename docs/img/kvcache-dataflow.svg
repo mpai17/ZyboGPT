@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 380" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <marker id="a" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#546E7A"/>
+    </marker>
+  </defs>
+  <rect width="580" height="380" fill="#fff"/>
+
+  <text x="290" y="18" text-anchor="middle"
+        font-size="13" font-weight="600" fill="#37474F">KV Cache — Dual BRAM with Shift-Based Addressing</text>
+
+  <!-- Address formula -->
+  <rect x="120" y="34" width="340" height="24" rx="4"
+        fill="#E3F2FD" stroke="#42A5F5" stroke-width="1.2"/>
+  <text x="290" y="50" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#1565C0">addr = layer≪13 | head≪12 | pos≪5 | dim (zero LUTs)</text>
+
+  <!-- ═══ WRITE PATH (left) ═══ -->
+  <rect x="20" y="72" width="240" height="128" rx="6"
+        fill="none" stroke="#7CB342" stroke-width="1.5" stroke-dasharray="6 3"/>
+  <text x="36" y="88" font-size="10" font-weight="600" fill="#558B2F">WRITE PATH</text>
+
+  <rect x="40" y="96" width="200" height="24" rx="4"
+        fill="#ECEFF1" stroke="#78909C" stroke-width="1.2"/>
+  <text x="140" y="112" text-anchor="middle" font-size="9" fill="#37474F">writeK/V + layer, head, pos</text>
+
+  <line x1="140" y1="120" x2="140" y2="140"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <rect x="40" y="140" width="200" height="46" rx="4"
+        fill="#E8F5E9" stroke="#43A047" stroke-width="1.5"/>
+  <text x="140" y="160" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#2E7D32">Serialize (32 cycles)</text>
+  <text x="140" y="176" text-anchor="middle"
+        font-size="8" fill="#66BB6A">writeStep: 0 → headDim−1</text>
+
+  <!-- ═══ READ PATH (right) ═══ -->
+  <rect x="320" y="72" width="240" height="128" rx="6"
+        fill="none" stroke="#42A5F5" stroke-width="1.5" stroke-dasharray="6 3"/>
+  <text x="336" y="88" font-size="10" font-weight="600" fill="#1565C0">READ PATH</text>
+
+  <rect x="340" y="96" width="200" height="24" rx="4"
+        fill="#ECEFF1" stroke="#78909C" stroke-width="1.2"/>
+  <text x="440" y="112" text-anchor="middle" font-size="9" fill="#37474F">readPos, head, layer</text>
+
+  <line x1="440" y1="120" x2="440" y2="140"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <rect x="340" y="140" width="200" height="46" rx="4"
+        fill="#E8F5E9" stroke="#43A047" stroke-width="1.5"/>
+  <text x="440" y="160" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#2E7D32">readSync (32 cycles)</text>
+  <text x="440" y="176" text-anchor="middle"
+        font-size="8" fill="#66BB6A">readStep + readStepDelayed</text>
+
+  <!-- Arrows down to BRAMs -->
+  <line x1="140" y1="186" x2="140" y2="216"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+  <text x="163" y="206" font-size="8" fill="#90A4AE" font-style="italic">write</text>
+
+  <line x1="440" y1="186" x2="440" y2="216"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+  <text x="463" y="206" font-size="8" fill="#90A4AE" font-style="italic">addr</text>
+
+  <!-- ═══ BRAMs (below both path boxes) ═══ -->
+  <rect x="50" y="216" width="210" height="28" rx="4"
+        fill="#F3E5F5" stroke="#8E24AA" stroke-width="1.5"/>
+  <text x="155" y="234" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#6A1B9A">kMem [16K × INT8]</text>
+
+  <rect x="320" y="216" width="210" height="28" rx="4"
+        fill="#F3E5F5" stroke="#8E24AA" stroke-width="1.5"/>
+  <text x="425" y="234" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#6A1B9A">vMem [16K × INT8]</text>
+
+  <!-- Arrows from BRAMs down to read pipeline -->
+  <line x1="155" y1="244" x2="155" y2="274"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+  <line x1="425" y1="244" x2="425" y2="274"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+  <text x="290" y="264" text-anchor="middle"
+        font-size="8" fill="#90A4AE" font-style="italic">1-cycle read latency</text>
+
+  <!-- Read delayed pipeline -->
+  <rect x="100" y="274" width="380" height="26" rx="4"
+        fill="#E3F2FD" stroke="#42A5F5" stroke-width="1.5"/>
+  <text x="290" y="291" text-anchor="middle"
+        font-size="9" font-weight="500" fill="#1565C0">readingDelayed + readStepDelayed pipeline</text>
+
+  <!-- Arrow to output -->
+  <line x1="290" y1="300" x2="290" y2="320"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- Output -->
+  <rect x="210" y="320" width="160" height="24" rx="4"
+        fill="#FFEBEE" stroke="#E53935" stroke-width="1.5"/>
+  <text x="290" y="336" text-anchor="middle"
+        font-size="10" font-weight="600" fill="#C62828">readK/V + valid</text>
+
+  <!-- Note -->
+  <text x="290" y="362" text-anchor="middle"
+        font-size="9" fill="#90A4AE">2 × 16K entries (8 BRAM36 tiles) · Zero LUTs for address math</text>
+</svg>

@@ -1,0 +1,158 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 500" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <marker id="a" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#546E7A"/>
+    </marker>
+  </defs>
+  <rect width="560" height="500" fill="#fff"/>
+
+  <text x="280" y="18" text-anchor="middle"
+        font-size="13" font-weight="600" fill="#37474F">Softmax — Integer Probability Dataflow</text>
+
+  <!-- Input -->
+  <rect x="180" y="34" width="200" height="24" rx="4"
+        fill="#ECEFF1" stroke="#78909C" stroke-width="1.2"/>
+  <text x="280" y="50" text-anchor="middle"
+        font-size="10" fill="#37474F">scoreAddr / scoreData [INT16]</text>
+
+  <line x1="280" y1="58" x2="280" y2="78"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- LOAD_AND_FIND_MAX -->
+  <rect x="100" y="78" width="360" height="52" rx="6"
+        fill="none" stroke="#7CB342" stroke-width="1.5" stroke-dasharray="6 3"/>
+  <text x="116" y="93" font-size="10" font-weight="600" fill="#558B2F">LOAD_AND_FIND_MAX (128 cyc)</text>
+
+  <rect x="120" y="100" width="140" height="24" rx="4"
+        fill="#F3E5F5" stroke="#8E24AA" stroke-width="1.5"/>
+  <text x="190" y="116" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#6A1B9A">scoreMem [128×INT16]</text>
+
+  <rect x="290" y="100" width="150" height="24" rx="4"
+        fill="#FFF9C4" stroke="#F9A825" stroke-width="1.5"/>
+  <text x="365" y="116" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#F57F17">track maxVal</text>
+
+  <line x1="260" y1="112" x2="290" y2="112"
+        stroke="#546E7A" stroke-width="1" marker-end="url(#a)"/>
+
+  <!-- Arrow down -->
+  <line x1="280" y1="130" x2="280" y2="150"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- SUBTRACT_EXP -->
+  <rect x="60" y="150" width="440" height="70" rx="6"
+        fill="none" stroke="#42A5F5" stroke-width="1.5" stroke-dasharray="6 3"/>
+  <text x="76" y="165" font-size="10" font-weight="600" fill="#1565C0">SUBTRACT_EXP (~130 cyc) — 3-stage pipeline</text>
+
+  <rect x="80" y="176" width="100" height="30" rx="4"
+        fill="#E8F5E9" stroke="#43A047" stroke-width="1.5"/>
+  <text x="130" y="192" text-anchor="middle"
+        font-size="9" font-weight="500" fill="#2E7D32">score − max</text>
+  <text x="130" y="203" text-anchor="middle"
+        font-size="8" fill="#66BB6A">clamp [−128, 0]</text>
+
+  <line x1="180" y1="191" x2="210" y2="191"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <rect x="210" y="176" width="110" height="30" rx="4"
+        fill="#F3E5F5" stroke="#8E24AA" stroke-width="1.5"/>
+  <text x="265" y="192" text-anchor="middle"
+        font-size="9" font-weight="500" fill="#6A1B9A">plExpLut</text>
+  <text x="265" y="203" text-anchor="middle"
+        font-size="8" fill="#AB47BC">256 × UINT16</text>
+
+  <line x1="320" y1="191" x2="350" y2="191"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <rect x="350" y="176" width="130" height="30" rx="4"
+        fill="#F3E5F5" stroke="#8E24AA" stroke-width="1.5"/>
+  <text x="415" y="192" text-anchor="middle"
+        font-size="9" font-weight="500" fill="#6A1B9A">expMem [128×UINT16]</text>
+
+  <!-- Arrow down -->
+  <line x1="280" y1="220" x2="280" y2="240"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- SUM_EXP -->
+  <rect x="130" y="240" width="300" height="46" rx="6"
+        fill="none" stroke="#E65100" stroke-width="1.5" stroke-dasharray="6 3"/>
+  <text x="146" y="255" font-size="10" font-weight="600" fill="#E65100">SUM_EXP + RECIP (~130 cyc)</text>
+
+  <rect x="150" y="264" width="80" height="18" rx="3"
+        fill="#E8F5E9" stroke="#43A047" stroke-width="1.2"/>
+  <text x="190" y="277" text-anchor="middle"
+        font-size="8" font-weight="500" fill="#2E7D32">Σ exp[i]</text>
+
+  <line x1="230" y1="273" x2="260" y2="273"
+        stroke="#546E7A" stroke-width="1" marker-end="url(#a)"/>
+
+  <rect x="260" y="264" width="75" height="18" rx="3"
+        fill="#F3E5F5" stroke="#8E24AA" stroke-width="1.2"/>
+  <text x="297" y="277" text-anchor="middle"
+        font-size="8" font-weight="500" fill="#6A1B9A">recipLut</text>
+
+  <line x1="335" y1="273" x2="355" y2="273"
+        stroke="#546E7A" stroke-width="1" marker-end="url(#a)"/>
+
+  <rect x="355" y="264" width="55" height="18" rx="3"
+        fill="#FFF9C4" stroke="#F9A825" stroke-width="1.2"/>
+  <text x="382" y="277" text-anchor="middle"
+        font-size="8" font-weight="500" fill="#F57F17">invSum</text>
+
+  <!-- Arrow down -->
+  <line x1="280" y1="286" x2="280" y2="308"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- NORMALIZE -->
+  <rect x="60" y="308" width="440" height="68" rx="6"
+        fill="none" stroke="#7CB342" stroke-width="1.5" stroke-dasharray="6 3"/>
+  <text x="76" y="323" font-size="10" font-weight="600" fill="#558B2F">NORMALIZE (~130 cyc) — 3-stage pipeline</text>
+
+  <rect x="80" y="336" width="100" height="30" rx="4"
+        fill="#E3F2FD" stroke="#42A5F5" stroke-width="1.5"/>
+  <text x="130" y="349" text-anchor="middle"
+        font-size="9" font-weight="500" fill="#1565C0">exp[i] read</text>
+  <text x="130" y="362" text-anchor="middle"
+        font-size="8" fill="#42A5F5">normExpDataReg</text>
+
+  <line x1="180" y1="351" x2="210" y2="351"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <rect x="210" y="336" width="120" height="30" rx="4"
+        fill="#E3F2FD" stroke="#42A5F5" stroke-width="1.5"/>
+  <text x="270" y="349" text-anchor="middle"
+        font-size="9" font-weight="500" fill="#1565C0">× invSum</text>
+  <text x="270" y="362" text-anchor="middle"
+        font-size="8" fill="#42A5F5">DSP PREG</text>
+
+  <line x1="330" y1="351" x2="360" y2="351"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <rect x="360" y="336" width="120" height="30" rx="4"
+        fill="#F3E5F5" stroke="#8E24AA" stroke-width="1.5"/>
+  <text x="420" y="349" text-anchor="middle"
+        font-size="9" font-weight="500" fill="#6A1B9A">≫8, clamp</text>
+  <text x="420" y="362" text-anchor="middle"
+        font-size="8" fill="#AB47BC">probMem [128×UINT8]</text>
+
+  <!-- Arrow down -->
+  <line x1="280" y1="376" x2="280" y2="398"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- Output -->
+  <rect x="180" y="398" width="200" height="24" rx="4"
+        fill="#FFEBEE" stroke="#E53935" stroke-width="1.5"/>
+  <text x="280" y="414" text-anchor="middle"
+        font-size="10" font-weight="600" fill="#C62828">probAddr → probData [UINT8]</text>
+
+  <!-- Note -->
+  <text x="280" y="448" text-anchor="middle"
+        font-size="9" fill="#90A4AE">~519 total cycles · 5 BRAMs · All data via addr/data interfaces (no Vec mux trees)</text>
+
+  <!-- expMem feedback arrow to NORMALIZE -->
+  <path d="M 480,191 H 510 V 351 H 480"
+        stroke="#8E24AA" stroke-width="1" fill="none" marker-end="url(#a)"/>
+  <text x="517" y="275" font-size="8" fill="#8E24AA" font-style="italic"
+        transform="rotate(-90 517 275)">expMem read</text>
+</svg>

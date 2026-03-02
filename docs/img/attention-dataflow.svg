@@ -1,0 +1,249 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 610" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <marker id="a" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#546E7A"/>
+    </marker>
+    <marker id="ap" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#8E24AA"/>
+    </marker>
+  </defs>
+  <rect width="700" height="610" fill="#fff"/>
+
+  <text x="350" y="18" text-anchor="middle"
+        font-size="13" font-weight="600" fill="#37474F">Attention — Multi-Head Attention Dataflow (17-state FSM)</text>
+
+  <!-- Input -->
+  <rect x="100" y="36" width="130" height="24" rx="4"
+        fill="#ECEFF1" stroke="#78909C" stroke-width="1.2"/>
+  <text x="165" y="52" text-anchor="middle" font-size="10" fill="#37474F">x [64 × INT8]</text>
+
+  <line x1="165" y1="60" x2="165" y2="80"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- ═══ Phase 1: Projections ═══ -->
+  <rect x="30" y="80" width="300" height="56" rx="6"
+        fill="none" stroke="#7CB342" stroke-width="1.5" stroke-dasharray="6 3"/>
+  <text x="46" y="95" font-size="10" font-weight="600" fill="#558B2F">Phase 1 — Q, K, V Projections</text>
+
+  <rect x="50" y="102" width="120" height="26" rx="4"
+        fill="#E8F5E9" stroke="#43A047" stroke-width="1.5"/>
+  <text x="110" y="119" text-anchor="middle"
+        font-size="9" font-weight="500" fill="#2E7D32">TDot (3×2 batches)</text>
+
+  <line x1="170" y1="115" x2="192" y2="115"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <rect x="192" y="102" width="120" height="26" rx="4"
+        fill="#E3F2FD" stroke="#42A5F5" stroke-width="1.5"/>
+  <text x="252" y="119" text-anchor="middle"
+        font-size="9" font-weight="500" fill="#1565C0">qBuf, kBuf, vBuf</text>
+
+  <!-- Arrow down -->
+  <line x1="165" y1="136" x2="165" y2="158"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+  <text x="198" y="151" font-size="8" fill="#90A4AE" font-style="italic">K, V</text>
+
+  <!-- ═══ STORE_KV ═══ -->
+  <rect x="80" y="158" width="170" height="26" rx="4"
+        fill="#E8F5E9" stroke="#43A047" stroke-width="1.5"/>
+  <text x="165" y="175" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#2E7D32">STORE_KV (2×32 writes)</text>
+
+  <!-- Arrow down -->
+  <line x1="165" y1="184" x2="165" y2="210"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- ═══ Phase 2: Score Computation ═══ -->
+  <rect x="30" y="210" width="300" height="68" rx="6"
+        fill="none" stroke="#42A5F5" stroke-width="1.5" stroke-dasharray="6 3"/>
+  <text x="46" y="226" font-size="10" font-weight="600" fill="#1565C0">Phase 2 — Score (per position)</text>
+
+  <rect x="50" y="236" width="90" height="32" rx="4"
+        fill="#E8F5E9" stroke="#43A047" stroke-width="1.5"/>
+  <text x="95" y="250" text-anchor="middle"
+        font-size="9" font-weight="500" fill="#2E7D32">Q · K^T</text>
+  <text x="95" y="262" text-anchor="middle"
+        font-size="7" fill="#66BB6A">MAC 8× → sum</text>
+
+  <line x1="140" y1="252" x2="158" y2="252"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <rect x="158" y="236" width="60" height="32" rx="4"
+        fill="#E3F2FD" stroke="#42A5F5" stroke-width="1.5"/>
+  <text x="188" y="250" text-anchor="middle"
+        font-size="8" font-weight="500" fill="#1565C0">×45≫8</text>
+  <text x="188" y="262" text-anchor="middle"
+        font-size="7" fill="#42A5F5">1/√32</text>
+
+  <line x1="218" y1="252" x2="236" y2="252"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <rect x="236" y="236" width="76" height="32" rx="4"
+        fill="#F3E5F5" stroke="#8E24AA" stroke-width="1.5"/>
+  <text x="274" y="250" text-anchor="middle"
+        font-size="8" font-weight="500" fill="#6A1B9A">scoreMem</text>
+  <text x="274" y="262" text-anchor="middle"
+        font-size="7" fill="#AB47BC">128×INT16</text>
+
+  <!-- Arrow down -->
+  <line x1="165" y1="278" x2="165" y2="288"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- ═══ Phase 3: Softmax ═══ -->
+  <rect x="30" y="288" width="300" height="50" rx="6"
+        fill="none" stroke="#8E24AA" stroke-width="1.5" stroke-dasharray="6 3"/>
+  <text x="46" y="303" font-size="10" font-weight="600" fill="#6A1B9A">Phase 3 — Softmax</text>
+
+  <rect x="80" y="310" width="170" height="26" rx="4"
+        fill="#E8F5E9" stroke="#43A047" stroke-width="1.5"/>
+  <text x="165" y="322" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#2E7D32">Softmax</text>
+  <text x="165" y="333" text-anchor="middle"
+        font-size="7" fill="#66BB6A">→ probMem [128×UINT8]</text>
+
+  <!-- Arrow down -->
+  <line x1="165" y1="338" x2="165" y2="352"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+  <text x="198" y="348" font-size="8" fill="#90A4AE" font-style="italic">probs</text>
+
+  <!-- ═══ Phase 4: Value Accumulation ═══ -->
+  <rect x="30" y="352" width="300" height="68" rx="6"
+        fill="none" stroke="#E65100" stroke-width="1.5" stroke-dasharray="6 3"/>
+  <text x="46" y="368" font-size="10" font-weight="600" fill="#E65100">Phase 4 — Value (per position)</text>
+
+  <rect x="50" y="380" width="90" height="32" rx="4"
+        fill="#E3F2FD" stroke="#42A5F5" stroke-width="1.5"/>
+  <text x="95" y="394" text-anchor="middle"
+        font-size="9" font-weight="500" fill="#1565C0">prob × V</text>
+  <text x="95" y="406" text-anchor="middle"
+        font-size="7" fill="#42A5F5">3-stage pipe</text>
+
+  <line x1="140" y1="396" x2="158" y2="396"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <rect x="158" y="380" width="75" height="32" rx="4"
+        fill="#FFF9C4" stroke="#F9A825" stroke-width="1.5"/>
+  <text x="195" y="394" text-anchor="middle"
+        font-size="8" font-weight="500" fill="#F57F17">attnAccum</text>
+  <text x="195" y="406" text-anchor="middle"
+        font-size="7" fill="#F9A825">[32×INT24]</text>
+
+  <line x1="233" y1="396" x2="251" y2="396"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <rect x="251" y="384" width="62" height="24" rx="4"
+        fill="#E8F5E9" stroke="#43A047" stroke-width="1.5"/>
+  <text x="282" y="400" text-anchor="middle"
+        font-size="8" font-weight="500" fill="#2E7D32">SatInt8≫8</text>
+
+  <!-- Arrow down -->
+  <line x1="165" y1="420" x2="165" y2="444"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- ═══ CONCAT ═══ -->
+  <rect x="75" y="444" width="180" height="26" rx="4"
+        fill="#E3F2FD" stroke="#42A5F5" stroke-width="1.5"/>
+  <text x="165" y="461" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#1565C0">CONCAT → oProjInputBuf</text>
+
+  <!-- Arrow down -->
+  <line x1="165" y1="470" x2="165" y2="494"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- ═══ Phase 5: O_PROJ ═══ -->
+  <rect x="80" y="494" width="170" height="26" rx="4"
+        fill="#E8F5E9" stroke="#43A047" stroke-width="1.5"/>
+  <text x="165" y="511" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#2E7D32">O_PROJ (TDot ×2 batches)</text>
+
+  <!-- Arrow down -->
+  <line x1="165" y1="520" x2="165" y2="544"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- Output -->
+  <rect x="100" y="544" width="130" height="24" rx="4"
+        fill="#FFEBEE" stroke="#E53935" stroke-width="1.5"/>
+  <text x="165" y="560" text-anchor="middle"
+        font-size="11" font-weight="600" fill="#C62828">result [64×INT8]</text>
+
+  <!-- ═══════ SHARED RESOURCES (right column) ═══════ -->
+  <rect x="455" y="78" width="230" height="216" rx="8"
+        fill="none" stroke="#B0BEC5" stroke-width="1.2" stroke-dasharray="8 4"/>
+  <text x="471" y="94" font-size="10" fill="#90A4AE"
+        font-weight="600" letter-spacing="1">SHARED RESOURCES</text>
+
+  <!-- TDot -->
+  <rect x="475" y="106" width="190" height="38" rx="4"
+        fill="#F3E5F5" stroke="#8E24AA" stroke-width="1.5"/>
+  <text x="570" y="122" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#6A1B9A">WeightBram / TDot</text>
+  <text x="570" y="136" text-anchor="middle"
+        font-size="7" fill="#AB47BC">in: Q,K,V proj (Ph1) · out: O proj (Ph5)</text>
+
+  <!-- KV Cache -->
+  <rect x="475" y="152" width="190" height="38" rx="4"
+        fill="#FFF9C4" stroke="#F9A825" stroke-width="1.5"/>
+  <text x="570" y="168" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#F57F17">KV Cache</text>
+  <text x="570" y="182" text-anchor="middle"
+        font-size="7" fill="#F9A825">in: K,V (Ph1) · out: K (Ph2), V (Ph4)</text>
+
+  <!-- MAC Array -->
+  <rect x="475" y="198" width="190" height="38" rx="4"
+        fill="#E3F2FD" stroke="#42A5F5" stroke-width="1.5"/>
+  <text x="570" y="214" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#1565C0">MAC Array (8×)</text>
+  <text x="570" y="228" text-anchor="middle"
+        font-size="7" fill="#42A5F5">in: Q,K (Ph2) · out: partial sums (Ph2)</text>
+
+  <!-- Softmax module -->
+  <rect x="475" y="244" width="190" height="38" rx="4"
+        fill="#E8F5E9" stroke="#43A047" stroke-width="1.5"/>
+  <text x="570" y="260" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#2E7D32">Softmax</text>
+  <text x="570" y="274" text-anchor="middle"
+        font-size="7" fill="#66BB6A">in: scores (Ph3) · out: probs (Ph4)</text>
+
+  <!-- ═══ Purple arrows — organized on 5 vertical tracks ═══ -->
+  <!-- Output tracks (resource → processing): x=350, 370, 400, 420 -->
+  <!-- Input track  (processing → resource): x=450                  -->
+
+  <!-- ── TDot ── -->
+  <!-- Phase 1 → TDot (in, straight horizontal) -->
+  <path d="M 330,115 H 475"
+        stroke="#8E24AA" stroke-width="1.3" fill="none" marker-end="url(#ap)"/>
+  <!-- TDot → Phase 5 O_PROJ (out, track x=350) -->
+  <path d="M 475,136 H 350 V 507 H 250"
+        stroke="#8E24AA" stroke-width="1.3" fill="none" marker-end="url(#ap)"/>
+
+  <!-- ── KV Cache ── -->
+  <!-- STORE_KV → KV Cache (in, straight horizontal) -->
+  <path d="M 250,171 H 475"
+        stroke="#8E24AA" stroke-width="1.3" fill="none" marker-end="url(#ap)"/>
+  <!-- KV Cache → Phase 2 read K (out, track x=420) -->
+  <path d="M 475,162 H 420 V 248 H 330"
+        stroke="#8E24AA" stroke-width="1.3" fill="none" marker-end="url(#ap)"/>
+  <!-- KV Cache → Phase 4 read V (out, track x=370) -->
+  <path d="M 475,182 H 370 V 396 H 330"
+        stroke="#8E24AA" stroke-width="1.3" fill="none" marker-end="url(#ap)"/>
+
+  <!-- ── MAC Array ── -->
+  <!-- Phase 2 → MAC Array (in, track x=450) -->
+  <path d="M 330,256 H 450 V 214 H 475"
+        stroke="#8E24AA" stroke-width="1.3" fill="none" marker-end="url(#ap)"/>
+  <!-- MAC Array → Phase 2 (out, track x=400) -->
+  <path d="M 475,225 H 400 V 235 H 330"
+        stroke="#8E24AA" stroke-width="1.3" fill="none" marker-end="url(#ap)"/>
+
+  <!-- ── Softmax ── -->
+  <!-- Phase 3 → Softmax (in, track x=440) -->
+  <path d="M 330,323 H 440 V 258 H 475"
+        stroke="#8E24AA" stroke-width="1.3" fill="none" marker-end="url(#ap)"/>
+  <!-- Softmax → Phase 4 (out, track x=420) -->
+  <path d="M 475,274 H 420 V 385 H 330"
+        stroke="#8E24AA" stroke-width="1.3" fill="none" marker-end="url(#ap)"/>
+
+  <!-- Note -->
+  <text x="350" y="595" text-anchor="middle"
+        font-size="9" fill="#90A4AE">×2 heads · Score/prob via BRAM addr/data interfaces · CONCAT prevents O_PROJ aliasing</text>
+</svg>

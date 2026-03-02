@@ -1,0 +1,177 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 470" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <marker id="a" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#546E7A"/>
+    </marker>
+    <marker id="ap" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#8E24AA"/>
+    </marker>
+    <marker id="apr" markerWidth="8" markerHeight="6" refX="0" refY="3" orient="auto">
+      <path d="M8,0 L0,3 L8,6 Z" fill="#8E24AA"/>
+    </marker>
+  </defs>
+  <rect width="640" height="470" fill="#fff"/>
+
+  <text x="320" y="18" text-anchor="middle"
+        font-size="13" font-weight="600" fill="#37474F">TransformerLayer — Norm → Attention → Residual → Norm → FFN → Residual</text>
+
+  <!-- Input -->
+  <rect x="120" y="38" width="140" height="24" rx="4"
+        fill="#ECEFF1" stroke="#78909C" stroke-width="1.2"/>
+  <text x="190" y="54" text-anchor="middle" font-size="10" fill="#37474F">x [64 × INT8]</text>
+
+  <line x1="190" y1="62" x2="190" y2="84"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- xBuf -->
+  <rect x="130" y="84" width="120" height="24" rx="4"
+        fill="#E3F2FD" stroke="#42A5F5" stroke-width="1.5"/>
+  <text x="190" y="100" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#1565C0">xBuf [64×INT8]</text>
+
+  <!-- Arrow down -->
+  <line x1="190" y1="108" x2="190" y2="130"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- ATTN_NORM -->
+  <rect x="105" y="130" width="170" height="30" rx="4"
+        fill="#E8F5E9" stroke="#43A047" stroke-width="1.5"/>
+  <text x="190" y="149" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#2E7D32">RMSNorm (attn)</text>
+
+  <!-- Arrow down -->
+  <line x1="190" y1="160" x2="190" y2="178"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- normedBuf -->
+  <rect x="117" y="178" width="146" height="22" rx="4"
+        fill="#E3F2FD" stroke="#42A5F5" stroke-width="1.2"/>
+  <text x="190" y="193" text-anchor="middle"
+        font-size="9" font-weight="500" fill="#1565C0">normedBuf [64×INT8]</text>
+
+  <!-- Arrow down -->
+  <line x1="190" y1="200" x2="190" y2="218"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- ATTENTION -->
+  <rect x="105" y="218" width="170" height="30" rx="4"
+        fill="#E8F5E9" stroke="#43A047" stroke-width="1.5"/>
+  <text x="190" y="237" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#2E7D32">Attention</text>
+
+  <!-- Arrow down to residual -->
+  <line x1="190" y1="248" x2="190" y2="272"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- ATTN_RESIDUAL -->
+  <rect x="115" y="272" width="150" height="24" rx="4"
+        fill="#FFF9C4" stroke="#F9A825" stroke-width="1.5"/>
+  <text x="190" y="288" text-anchor="middle"
+        font-size="10" font-weight="600" fill="#F57F17">(+) SatInt8</text>
+
+  <!-- Residual arrow from xBuf -->
+  <path d="M 130,96 H 50 V 284 H 115"
+        stroke="#546E7A" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+
+  <!-- Arrow down -->
+  <line x1="190" y1="296" x2="190" y2="318"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- FF_NORM -->
+  <rect x="105" y="318" width="170" height="30" rx="4"
+        fill="#E8F5E9" stroke="#43A047" stroke-width="1.5"/>
+  <text x="190" y="337" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#2E7D32">RMSNorm (ff)</text>
+
+  <!-- Arrow down -->
+  <line x1="190" y1="348" x2="190" y2="366"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- FEEDFORWARD -->
+  <rect x="105" y="366" width="170" height="30" rx="4"
+        fill="#E8F5E9" stroke="#43A047" stroke-width="1.5"/>
+  <text x="190" y="385" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#2E7D32">FeedForward</text>
+
+  <!-- Arrow down to residual -->
+  <line x1="190" y1="396" x2="190" y2="416"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- FF_RESIDUAL -->
+  <rect x="115" y="416" width="150" height="24" rx="4"
+        fill="#FFF9C4" stroke="#F9A825" stroke-width="1.5"/>
+  <text x="190" y="432" text-anchor="middle"
+        font-size="10" font-weight="600" fill="#F57F17">(+) SatInt8</text>
+
+  <!-- Residual arrow from updated xBuf -->
+  <path d="M 50,284 V 428 H 115"
+        stroke="#546E7A" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+
+  <!-- Output -->
+  <line x1="265" y1="428" x2="330" y2="428"
+        stroke="#546E7A" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <rect x="330" y="416" width="160" height="24" rx="4"
+        fill="#FFEBEE" stroke="#E53935" stroke-width="1.5"/>
+  <text x="410" y="432" text-anchor="middle"
+        font-size="10" font-weight="600" fill="#C62828">resultBuf [64×INT8]</text>
+
+  <!-- ═══ SHARED RESOURCES (right) ═══ -->
+  <rect x="370" y="100" width="250" height="260" rx="8"
+        fill="none" stroke="#B0BEC5" stroke-width="1.2" stroke-dasharray="8 4"/>
+  <text x="386" y="116" font-size="10" fill="#90A4AE"
+        font-weight="600" letter-spacing="1">SHARED RESOURCES</text>
+
+  <rect x="390" y="126" width="210" height="26" rx="4"
+        fill="#F3E5F5" stroke="#8E24AA" stroke-width="1.5"/>
+  <text x="495" y="143" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#6A1B9A">normGammaMem [320×INT16]</text>
+
+  <rect x="390" y="162" width="210" height="26" rx="4"
+        fill="#F3E5F5" stroke="#8E24AA" stroke-width="1.5"/>
+  <text x="495" y="179" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#6A1B9A">WeightBram / TDot</text>
+
+  <rect x="390" y="198" width="210" height="26" rx="4"
+        fill="#E3F2FD" stroke="#42A5F5" stroke-width="1.5"/>
+  <text x="495" y="215" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#1565C0">MAC Array (8×)</text>
+
+  <rect x="390" y="234" width="210" height="26" rx="4"
+        fill="#FFF9C4" stroke="#F9A825" stroke-width="1.5"/>
+  <text x="495" y="251" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#F57F17">KV Cache</text>
+
+  <rect x="390" y="270" width="210" height="26" rx="4"
+        fill="#E8F5E9" stroke="#43A047" stroke-width="1.5"/>
+  <text x="495" y="287" text-anchor="middle"
+        font-size="10" font-weight="500" fill="#2E7D32">Softmax</text>
+
+  <!-- Arrows from processing blocks to shared resources -->
+  <!-- gamma → Norms -->
+  <path d="M 390,139 H 310 V 145 H 275"
+        stroke="#8E24AA" stroke-width="1.2" fill="none" marker-end="url(#ap)"/>
+  <path d="M 310,145 V 333 H 275"
+        stroke="#8E24AA" stroke-width="1.2" fill="none" marker-end="url(#ap)"/>
+
+  <!-- Attention ↔ TDot, MAC, KV, Softmax (bidirectional) -->
+  <path d="M 275,227 H 340 V 175 H 390"
+        stroke="#8E24AA" stroke-width="1.2" fill="none" marker-start="url(#apr)" marker-end="url(#ap)"/>
+
+  <path d="M 275,231 H 350 V 211 H 390"
+        stroke="#8E24AA" stroke-width="1.2" fill="none" marker-start="url(#apr)" marker-end="url(#ap)"/>
+
+  <path d="M 275,235 H 360 V 247 H 390"
+        stroke="#8E24AA" stroke-width="1.2" fill="none" marker-start="url(#apr)" marker-end="url(#ap)"/>
+
+  <path d="M 275,239 H 370 V 283 H 390"
+        stroke="#8E24AA" stroke-width="1.2" fill="none" marker-start="url(#apr)" marker-end="url(#ap)"/>
+
+  <!-- FFN ↔ TDot (overridden during FEEDFORWARD state) -->
+  <path d="M 275,381 H 330 V 182 H 390"
+        stroke="#8E24AA" stroke-width="1.2" fill="none" marker-start="url(#apr)" marker-end="url(#ap)"/>
+
+  <!-- Note -->
+  <text x="320" y="462" text-anchor="middle"
+        font-size="9" fill="#90A4AE">TDot wired to Attention by default; overridden to FFN during FEEDFORWARD state</text>
+</svg>
