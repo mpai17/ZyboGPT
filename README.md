@@ -4,6 +4,10 @@ A ternary-quantized character-level LLM running entirely on a Zybo Z7-10 FPGA (Z
 
 Ternary weight packing uses the TerEffic 1.6-bit scheme (5 trits per byte), based on the [TerEffic paper](https://arxiv.org/abs/2502.16473) (arXiv:2502.16473).
 
+## Demo
+
+<video src="demo.mp4" controls width="100%"></video>
+
 ## Performance
 
 | Metric | Value |
@@ -12,6 +16,13 @@ Ternary weight packing uses the TerEffic 1.6-bit scheme (5 trits per byte), base
 | Simulation throughput | 5,441 tok/s |
 | Clock frequency | 150 MHz |
 | Board power | ~2-3 W |
+
+<p align="center">
+  <img src="docs/benchmark_tokens_per_sec.png" alt="Throughput: CPU vs GPU vs FPGA" width="48%">
+  <img src="docs/benchmark_tokens_per_sec_per_watt.png" alt="Efficiency: CPU vs GPU vs FPGA" width="48%">
+</p>
+
+The $200 Zybo Z7-10 outperforms both a Ryzen 5800X3D (8×) and an RTX 5080 (2.4×) in raw decode throughput on the same model — and delivers **290× better power efficiency** than the GPU (1,017 vs 3.5 tok/s/W).
 
 ### Resource Utilization
 
