@@ -6,7 +6,7 @@ Ternary weight packing uses the TerEffic 1.6-bit scheme (5 trits per byte), base
 
 ## Demo
 
-<video src="demo.mp4" controls width="100%"></video>
+[demo.mp4](demo.mp4)
 
 ## Performance
 
